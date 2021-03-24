@@ -1,9 +1,19 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Product } from './../../models/product.model';
 
+import * as Sentry from "@sentry/angular";
+
 import { environment } from './../../../../environments/environment';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+
+interface User{
+  email: string;
+  gender: string;
+  phone: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +41,24 @@ export class ProductsService {
   }
 
   deleteProduct(id: string) {
-    return this.http.delete(`${environment.url_api}/products/${id}`);
+    return this.http.delete(`${environment.url_api}/products/${id}`)
+    .pipe (
+      catchError(this.handleError),
+    );
+  }
+
+  getRandomUsers(): Observable<User[]>{
+    return this.http.get('https://randomuser.me/api/?results=2')
+    .pipe(
+      catchError(this.handleError),
+      map((response: any) => response.results as User[])
+    );
+  }
+
+  //manejo de errorres(función que se reutiliza en los demás métodos)
+  private handleError(error: HttpErrorResponse) {
+    console.log(error);
+    Sentry.captureException(error);
+    return throwError('ups algo salió mal');
   }
 }

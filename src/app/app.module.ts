@@ -16,6 +16,26 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { environment } from './../environments/environment';
 
+// import { enableProdMode } from "@angular/core";
+// import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+import * as Sentry from "@sentry/angular";
+import { Integrations } from "@sentry/tracing";
+
+Sentry.init({
+  dsn: "https://a27a3458a70441049feb378e6ec1c44e@o558231.ingest.sentry.io/5691468",
+  integrations: [
+    new Integrations.BrowserTracing({
+      tracingOrigins: ["localhost", "https://4200.io/api"],
+      routingInstrumentation: Sentry.routingInstrumentation,
+    }),
+  ],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
+
 @NgModule({
   declarations: [
     AppComponent,
