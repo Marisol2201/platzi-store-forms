@@ -2,7 +2,7 @@ import { TestBed, inject, waitForAsync } from '@angular/core/testing';
 
 import { AdminGuard } from './admin.guard';
 
-describe('AdminGuard', () => {
+xdescribe('AdminGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [AdminGuard]
